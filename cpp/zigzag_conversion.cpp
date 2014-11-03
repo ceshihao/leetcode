@@ -1,6 +1,7 @@
 class Solution {
 public:
     string convert(string s, int nRows) {
+        if (nRows == 1) return s;
         int length = s.size();
         string result;
         for (int i=0; i<nRows; ++i)
