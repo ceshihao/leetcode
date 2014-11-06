@@ -15,6 +15,5 @@ public:
             }
             return length + 1;
         }
-
     }
 };
