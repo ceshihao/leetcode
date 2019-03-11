@@ -53,24 +53,16 @@
 func combinationSum(candidates []int, target int) [][]int {
 	var res [][]int
 	sort.Ints(candidates)
-	doCombinationSum(&res, candidates, []int{}, target, 0, 0)
+	dfs(candidates, []int{}, 0, target, &res)
 	return res
 }
 
-func doCombinationSum(res *[][]int, candidates []int, currentCandidates []int, target, currentSum, index int) {
-	if currentSum == target {
-		*res = append(*res, currentCandidates)
+func dfs(candidates []int, output []int, startIndex int, sum int, res *[][]int) {
+	if sum == 0 {
+		*res = append(*res, append([]int{}, output...))
 		return
 	}
-	if currentSum > target {
-		return
-	}
-
-	for i := index; i < len(candidates); i++ {
-		newCandidates := make([]int, len(currentCandidates)+1)
-		copy(newCandidates[:len(currentCandidates)], currentCandidates)
-		newCandidates[len(newCandidates)-1] = candidates[i]
-
-		doCombinationSum(res, candidates, newCandidates, target, currentSum+candidates[i], i)
+	for i := startIndex; i < len(candidates) && sum-candidates[i] >= 0; i++ {
+		dfs(candidates, append(output, candidates[i]), i, sum-candidates[i], res)
 	}
 }

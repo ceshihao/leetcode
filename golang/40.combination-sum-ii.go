@@ -48,36 +48,21 @@
  * ]
  *
  *
- */import (
-	"fmt"
-	"sort"
-)
+ */import "sort"
 
 func combinationSum2(candidates []int, target int) [][]int {
 	var res [][]int
-	existMap := make(map[string]bool)
 	sort.Ints(candidates)
-	doCombinationSum2(&res, &existMap, candidates, []int{}, target, 0, 0)
+	dfs(candidates, []int{}, 0, target, &res)
 	return res
 }
 
-func doCombinationSum2(res *[][]int, existMap *map[string]bool, candidates []int, currentCandidates []int, target, currentSum, index int) {
-	if currentSum == target {
-		if _, ok := (*existMap)[fmt.Sprint(currentCandidates)]; !ok {
-			*res = append(*res, currentCandidates)
-			(*existMap)[fmt.Sprint(currentCandidates)] = true
-		}
+func dfs(candidates []int, output []int, startIndex int, sum int, res *[][]int) {
+	if sum == 0 {
+		*res = append(*res, append([]int{}, output...))
 		return
 	}
-	if currentSum > target {
-		return
-	}
-
-	for i := index; i < len(candidates); i++ {
-		newCandidates := make([]int, len(currentCandidates)+1)
-		copy(newCandidates[:len(currentCandidates)], currentCandidates)
-		newCandidates[len(newCandidates)-1] = candidates[i]
-
-		doCombinationSum2(res, existMap, candidates, newCandidates, target, currentSum+candidates[i], i+1)
+	for i := startIndex; i < len(candidates) && sum-candidates[i] >= 0; i++ {
+		dfs(candidates, append(output, candidates[i]), i+1, sum-candidates[i], res)
 	}
 }
